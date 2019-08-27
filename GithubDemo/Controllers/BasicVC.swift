@@ -18,20 +18,16 @@ class BasicVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         super.viewDidLoad()
         viewTable.dataSource = self
         viewTable.delegate = self
-        getRepository()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            print(self.repos.count)
-           
+        self.getRepository(){
             self.viewTable.reloadData()
-            
-            
         }
+        
+        
         
         
         // Do any additional setup after loading the view.
     }
-    func getRepository()
+    func getRepository(completed: @escaping () -> ())
     {
         
         Alamofire.request(repoURL).responseData(completionHandler:{
@@ -45,6 +41,7 @@ class BasicVC: UIViewController, UITableViewDataSource, UITableViewDelegate
                     do {
                         
                         self.repos = try JSONDecoder().decode([Repository].self, from: data)
+                        completed()
                        
                         
                         
